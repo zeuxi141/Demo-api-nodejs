@@ -1,32 +1,50 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
+/* eslint-disable no-console */
 
+import exitHook from 'async-exit-hook'
 import express from 'express'
-import { mapOrder } from '~/utils/sorts.js'
+import { env } from '~/config/environment'
+import { CLOSE_DB, CONNECT_DB } from './config/mongodb'
 
-const app = express()
+const START_SERVER = () => {
 
-const hostname = 'localhost'
-const port = 8017
+  const app = express()
 
-app.get('/', (req, res) => {
-  // Test Absolute import mapOrder
-  console.log(mapOrder(
-    [ { id: 'id-1', name: 'One' },
-      { id: 'id-2', name: 'Two' },
-      { id: 'id-3', name: 'Three' },
-      { id: 'id-4', name: 'Four' },
-      { id: 'id-5', name: 'Five' } ],
-    ['id-5', 'id-4', 'id-2', 'id-3', 'id-1'],
-    'id'
-  ))
-  res.end('<h1>Hello World!</h1><hr>')
-})
+  app.get('/', async (req, res) => {
+    res.end('<h1>Hello World!</h1><hr>')
+  })
 
-app.listen(port, hostname, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Hello Trung Quan Dev, I am running at ${ hostname }:${ port }/`)
-})
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Hello ${env.AUTHOR}, I am running at http://${ env.APP_HOST }:${ env.APP_PORT }/`)
+  })
+
+  //exitHook được gọi sau khi process.exit hoặc app bị crash và Ctrl+C -> Cleanup
+  exitHook(() => {
+    console.log('Shutting down server ...')
+    CLOSE_DB()
+    console.log('Disconnected MongoDB')
+  })
+
+}
+
+
+//immedialy-invoked / anonymous Async Fuction (IIFE)
+// (async ()=>{
+//   try {
+//     console.log('Connecting to MongoDB cloud...')
+//     await CONNECT_DB()
+//     console.log('Connected to MongoDB cloud!')
+//     START_SERVER()
+//   } catch (error) {
+//     console.log(error)
+//     process.exit(0)
+//   }
+// })()
+
+CONNECT_DB()
+  .then(() => console.log('Connected to MongoDB cloud!'))
+  .then(() => START_SERVER())
+  .catch(error => {
+    console.log(error)
+    process.exit(0)
+  })
