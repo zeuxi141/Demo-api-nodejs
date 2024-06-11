@@ -1,7 +1,7 @@
 //router
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { demoRoutes } from '~/routes/v1/demoRoutes'
+import { demoRoute } from '~/routes/v1/demoRoutes'
 
 /**
  * Express router for API version 1.
@@ -20,7 +20,7 @@ Router.get('/status', (req, res) => {
 })
 
 // Mount demoRoutes under /demos
-Router.use('/demos', demoRoutes)
+Router.use('/demos', demoRoute)
 
 /**
  * The API version 1 router.
