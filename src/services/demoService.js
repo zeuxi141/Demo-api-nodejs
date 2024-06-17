@@ -4,12 +4,13 @@
  */
 //service demoService.js
 
+import { StatusCodes } from 'http-status-codes'
 import { demoBoardModel } from '~/models/demoBoardModel'
+import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formatters'
 
 
 const createNew = async (reqBody) => {
-  //xử lý dữ liệu đầu vào
   // eslint-disable-next-line no-useless-catch
   try {
     const newBoard = ({
@@ -24,16 +25,25 @@ const createNew = async (reqBody) => {
     //Lấy bản ghi sau khi gọi sau đs để trả về cho controller
     const getNewBoard = await demoBoardModel.findOneById(createBoard.insertedId.toString())
 
-
-    //Thông báo email, notification về cho admin khi có 1 board mới được tạo
-
     //đẩy kết quả trả về từ model sang controller
     return getNewBoard
   } catch (error) {throw error}
 
 }
 
+const getDetails = async (id) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    //Lấy bản ghi sau khi gọi sau đs để trả về cho controller
+    const board = await demoBoardModel.getDetails(id)
+    if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+    //đẩy kết quả trả về từ model sang controller
+    return board
+  } catch (error) {throw error}
+}
+
 export const demoService = {
-  createNew
+  createNew,
+  getDetails
 }
 

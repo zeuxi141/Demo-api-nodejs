@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 
 import exitHook from 'async-exit-hook'
+import cors from 'cors'
 import express from 'express'
 import { env } from '~/config/environment'
 import { APIs_V1 } from '~/routes/v1'
 import { CLOSE_DB, CONNECT_DB } from './config/mongodb'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
+import { corsOptions } from '~/config/cors'
 
 /**
  * Starts the server and listens for incoming requests.
@@ -14,13 +16,16 @@ const START_SERVER = () => {
 
   const app = express()
 
+  //enable cors
+  app.use(cors(corsOptions))
+
   //enable req.body json data
   app.use(express.json())
 
   //use API version 1
   app.use('/v1', APIs_V1)
 
-  //midderware error handling
+  //midderware error handling - xử lý lỗi tập trung
   app.use(errorHandlingMiddleware)
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {
