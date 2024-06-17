@@ -13,4 +13,8 @@ Router.route('/')
   })
   .post(demoValidation.createNew, demoController.createNew)
 
+Router.route('/:id')
+  .get(demoController.getDetails)
+  .put()
+
 export const demoRoute = Router

@@ -34,6 +34,7 @@ const createNew = async(data) => {
   } catch (error) { throw new Error(error)} //thow new Error(error) để trả stacktrace
 }
 
+//chỉ lấy board theo id
 const findOneById = async(id) => {
   try {
     return await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
@@ -42,10 +43,19 @@ const findOneById = async(id) => {
   } catch (error) { throw new Error(error)}
 }
 
+//Query tổng hợp (aggregate) để lấy thông tin toàn bộ cột và card trong board
+const getDetails = async(id) => {
+  try {
+    return await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({
+      _id: new ObjectId(id)
+    })
+  } catch (error) { throw new Error(error)}
+}
 
 export const demoBoardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_SCHEMA,
   createNew,
-  findOneById
+  findOneById,
+  getDetails
 }

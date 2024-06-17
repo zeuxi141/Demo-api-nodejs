@@ -1,7 +1,7 @@
 //router
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { demoRoute } from '~/routes/v1/demoRoutes'
+import { demoRoute } from '~/routes/v1/boardRoute'
 
 /**
  * Express router for API version 1.
@@ -15,6 +15,8 @@ const Router = express.Router()
  * @param {import('express').Request} req - The request object.
  * @param {import('express').Response} res - The response object.
  */
+
+
 Router.get('/status', (req, res) => {
   res.status(StatusCodes.OK).json({ message: 'API v1 is ready!' })
 })
