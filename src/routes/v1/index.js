@@ -22,7 +22,7 @@ Router.get('/status', (req, res) => {
 })
 
 // Mount demoRoutes under /demos
-Router.use('/demos', demoRoute)
+Router.use('/boards', demoRoute)
 
 /**
  * The API version 1 router.

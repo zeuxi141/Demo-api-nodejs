@@ -5,6 +5,7 @@
 //service demoService.js
 
 import { StatusCodes } from 'http-status-codes'
+import cloneDeep from 'lodash/cloneDeep'
 import { demoBoardModel } from '~/models/demoBoardModel'
 import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formatters'
@@ -20,7 +21,6 @@ const createNew = async (reqBody) => {
 
     //Gọi tới tầng model lưu dữ liệu newBoard vào database và lấy kết quả trả về
     const createBoard = await demoBoardModel.createNew(newBoard)
-    console.log(createBoard)
 
     //Lấy bản ghi sau khi gọi sau đs để trả về cho controller
     const getNewBoard = await demoBoardModel.findOneById(createBoard.insertedId.toString())
@@ -37,8 +37,22 @@ const getDetails = async (id) => {
     //Lấy bản ghi sau khi gọi sau đs để trả về cho controller
     const board = await demoBoardModel.getDetails(id)
     if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+
+    //cloneDeep để tránh thay đổi dữ liệu gốc
+    const resBoard = cloneDeep(board)
+
+    // Đưa card về đúng column của nó
+    resBoard.columns.forEach(column => {
+      //thay đổi giá trị cảu board này:  thực hiện đưa cards vào đúng column của nó
+      //card.columnId.equals(column._id) - mongodb object id equals
+      column.cards = resBoard.cards.filter(card => card.columnId.toString() === column._id.toString())
+    })
+
+    //xóa cards ra khỏi board
+    delete resBoard.cards
+
     //đẩy kết quả trả về từ model sang controller
-    return board
+    return resBoard
   } catch (error) {throw error}
 }
 
