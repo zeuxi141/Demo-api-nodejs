@@ -2,8 +2,8 @@
 
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { demoValidation } from '~/validations/demoValidation'
-import { demoController } from '~/controllers/demoController'
+import { boardController } from '~/controllers/boardController'
+import { boardValidation } from '~/validations/boardValidation'
 
 const Router = express.Router()
 
@@ -11,10 +11,10 @@ Router.route('/')
   .get((req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Hello from get demo' })
   })
-  .post(demoValidation.createNew, demoController.createNew)
+  .post(boardValidation.createNew, boardController.createNew)
 
 Router.route('/:id')
-  .get(demoController.getDetails)
+  .get(boardController.getDetails)
   .put()
 
 export const demoRoute = Router

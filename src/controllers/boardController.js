@@ -1,6 +1,6 @@
 //example controler
 import { StatusCodes } from 'http-status-codes'
-import { demoService } from '~/services/demoService'
+import { boardService } from '~/services/boardService'
 
 const createNew = async(req, res, next) => {
   try {
@@ -9,7 +9,7 @@ const createNew = async(req, res, next) => {
 
 
     //điều hướng dữ liệu từ controller tới service
-    const createNewBoard = await demoService.createNew(req.body)
+    const createNewBoard = await boardService.createNew(req.body)
 
     //trả về dữ liệu cho client
     res.status(StatusCodes.CREATED).json(createNewBoard)
@@ -20,7 +20,7 @@ const createNew = async(req, res, next) => {
 const getDetails = async(req, res, next) => {
   try {
     //điều hướng dữ liệu từ controller tới service
-    const board = await demoService.getDetails(req.params.id)
+    const board = await boardService.getDetails(req.params.id)
 
     //trả về dữ liệu cho client
     res.status(StatusCodes.OK).json(board)
@@ -29,7 +29,7 @@ const getDetails = async(req, res, next) => {
 }
 
 
-export const demoController = {
+export const boardController = {
   createNew,
   getDetails
 }

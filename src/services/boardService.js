@@ -56,7 +56,7 @@ const getDetails = async (id) => {
   } catch (error) {throw error}
 }
 
-export const demoService = {
+export const boardService = {
   createNew,
   getDetails
 }

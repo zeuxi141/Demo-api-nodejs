@@ -23,6 +23,6 @@ const createNew = async(req, res, next) => {
 
 }
 
-export const demoValidation = {
+export const boardValidation = {
   createNew
 }
