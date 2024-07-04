@@ -2,6 +2,9 @@
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { demoRoute } from '~/routes/v1/boardRoute'
+import { cardRoute } from '~/routes/v1/cardRoute'
+import { columnRoute } from '~/routes/v1/columnRoute'
+
 
 /**
  * Express router for API version 1.
@@ -23,6 +26,12 @@ Router.get('/status', (req, res) => {
 
 // Mount demoRoutes under /demos
 Router.use('/boards', demoRoute)
+
+// Mount demoRoutes under /demos
+Router.use('/cards', cardRoute)
+
+// Mount demoRoutes under /demos
+Router.use('/columns', columnRoute)
 
 /**
  * The API version 1 router.

@@ -1,4 +1,6 @@
 import Joi from 'joi'
+import { ObjectId } from 'mongodb'
+import { GET_DB } from '~/config/mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 // Define Collection (name & schema)
@@ -15,7 +17,32 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
+const validateSchema = async(data) => {
+  //validate dữ liệu trước khi tạo
+  return await CARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
+const createNew = async(data) => {
+  try {
+    //gọi tới hàm validateSchema để kiểm tra dữ liệu trước khi tạo sau đó lưu vào database
+    return await GET_DB().collection(CARD_COLLECTION_NAME).insertOne(await validateSchema(data))
+  } catch (error) { throw new Error(error)} //thow new Error(error) để trả stacktrace
+}
+
+//chỉ lấy board theo id
+
+//Query tổng hợp (aggregate) để lấy thông tin toàn bộ cột và card trong board
+const findOneById = async(id) => {
+  try {
+    return await GET_DB().collection(CARD_COLLECTION_NAME).findOne({
+      _id: new ObjectId(id)
+    })
+  } catch (error) { throw new Error(error)}
+}
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
-  CARD_COLLECTION_SCHEMA
+  CARD_COLLECTION_SCHEMA,
+  createNew,
+  findOneById
 }

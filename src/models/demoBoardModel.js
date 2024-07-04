@@ -26,20 +26,6 @@ const BOARD_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-//kiểm tra dữ liệu trước khi tạo
-const validateSchema = async(data) => {
-  //validate dữ liệu trước khi tạo
-  return await BOARD_SCHEMA.validateAsync(data, { abortEarly: false })
-}
-
-const createNew = async(data) => {
-  try {
-    //gọi tới hàm validateSchema để kiểm tra dữ liệu trước khi tạo sau đó lưu vào database
-    return await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(await validateSchema(data))
-  } catch (error) { throw new Error(error)} //thow new Error(error) để trả stacktrace
-}
-
-//chỉ lấy board theo id
 const getDetails = async(id) => {
   try {
     const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
@@ -65,6 +51,20 @@ const getDetails = async(id) => {
     return result[0] || {}
   } catch (error) { throw new Error(error)}
 }
+//kiểm tra dữ liệu trước khi tạo
+const validateSchema = async(data) => {
+  //validate dữ liệu trước khi tạo
+  return await BOARD_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
+const createNew = async(data) => {
+  try {
+    //gọi tới hàm validateSchema để kiểm tra dữ liệu trước khi tạo sau đó lưu vào database
+    return await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(await validateSchema(data))
+  } catch (error) { throw new Error(error)} //thow new Error(error) để trả stacktrace
+}
+
+//chỉ lấy board theo id
 
 //Query tổng hợp (aggregate) để lấy thông tin toàn bộ cột và card trong board
 const findOneById = async(id) => {
